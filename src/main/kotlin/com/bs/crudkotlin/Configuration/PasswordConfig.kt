@@ -1,5 +1,6 @@
 package com.bs.crudkotlin.Configuration
 
+import com.bs.crudkotlin.OAuth2.CustomOAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -10,7 +11,9 @@ import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
-class PasswordConfig {
+class PasswordConfig(
+    private val customOAuth2UserService: CustomOAuth2UserService
+) {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
@@ -27,7 +30,15 @@ class PasswordConfig {
             }
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
+            .oauth2Login {
+                it.userInfoEndpoint { endpoint ->
+                    endpoint.userService(customOAuth2UserService)
+                }
+                it.defaultSuccessUrl("/main.html", true)
+                it.failureUrl("/login.html?error=pending")
+            }
 
         return http.build()
     }
+
 }

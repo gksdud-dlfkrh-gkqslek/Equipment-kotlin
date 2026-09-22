@@ -10,4 +10,6 @@ interface UserRepository : JpaRepository<UserEntity, String> {
     fun findByPhone(phone: String): UserEntity?
     fun existsByPhone(phone: String): Boolean // 중복 체크
     fun findByApprovalStatus(status: ApprovalStatus): List<UserEntity> // 승인 대기 목록 조회
+
+    fun findByKakaoId(kakaoId: String): UserEntity?
 }

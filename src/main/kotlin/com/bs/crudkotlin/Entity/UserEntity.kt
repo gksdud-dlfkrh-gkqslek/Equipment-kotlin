@@ -6,6 +6,7 @@ import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.checkerframework.checker.units.qual.t
 import java.util.UUID
 
 @Entity
@@ -15,11 +16,11 @@ class UserEntity(
     @Column(length = 36)
     val id: String = UUID.randomUUID().toString(),
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     var phone: String,
 
-    @Column(nullable = false)
-    var password: String,  // 암호화된 비밀번호 저장
+    @Column(nullable = true)
+    var password: String? = null,  // 암호화된 비밀번호 저장
 
     @Column(nullable = false, length = 50)
     var name: String,
@@ -30,7 +31,10 @@ class UserEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var approvalStatus: ApprovalStatus = ApprovalStatus.PENDING
+    var approvalStatus: ApprovalStatus = ApprovalStatus.PENDING,
+
+    @Column(unique = true, nullable = true)
+    var kakaoId: String? = null
 
 )
 enum class UserRole {
